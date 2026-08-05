@@ -11,3 +11,4 @@ Este projeto contém o código-fonte do site da Igreja Mult.
 🚧 Em construção.
 
 <!-- Espelho do hub validado: fluxo cliente -> PROH-Media ativo. -->
+<!-- teste write hub 2 -->
