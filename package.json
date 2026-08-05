@@ -1,0 +1,23 @@
+{
+  "name": "igrejamult-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site oficial da Igreja Mult — página inicial (Em breve).",
+  "homepage": "https://github.com/9697media-ui/igrejamult",
+  "scripts": {
+    "build": "echo \"Site estatico (HTML/CSS/SVG) — nenhum passo de build necessario.\"",
+    "start": "npx --yes serve .",
+    "dev": "npx --yes serve ."
+  },
+  "keywords": [
+    "igreja-mult",
+    "site",
+    "landing-page",
+    "em-breve"
+  ],
+  "author": "Igreja Mult",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MULT. — Em breve</title>
+  <meta name="description" content="Igreja Mult — site oficial em breve. Fomos chamados para viver & compartilhar a fé em Jesus de maneira autêntica." />
+  <meta property="og:title" content="MULT. — Em breve" />
+  <meta property="og:description" content="Igreja Mult — site oficial em breve." />
+
+  <style>
+    @font-face {
+      font-family: 'Druk Wide';
+      src: url('assets/fonts/DrukWideBold.ttf') format('truetype');
+      font-weight: 700; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Mono45';
+      src: url('assets/fonts/Mono45Headline-Regular.ttf') format('truetype');
+      font-weight: 400; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Mono45 Light';
+      src: url('assets/fonts/Mono45Headline-Light.ttf') format('truetype');
+      font-weight: 300; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Apple Garamond';
+      src: url('assets/fonts/AppleGaramond.ttf') format('truetype');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Apple Garamond';
+      src: url('assets/fonts/AppleGaramond-Italic.ttf') format('truetype');
+      font-weight: 400; font-style: italic; font-display: swap;
+    }
+
+    :root {
+      --orange: #FA4C00;
+      --ink: #ffffff;
+      --bg: #000000;
+      --muted: rgba(255, 255, 255, 0.46);
+      --line: rgba(255, 255, 255, 0.18);
+      --pad: clamp(22px, 4vw, 46px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Mono45', monospace;
+      min-height: 100vh; min-height: 100svh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: var(--pad);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* brilho laranja de fundo, atrás da logo */
+    .glow-bg {
+      position: fixed;
+      left: 50%; top: 50%;
+      width: min(120vw, 900px); height: min(120vw, 900px);
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(250, 76, 0, 0.26) 0%, rgba(250, 76, 0, 0.09) 32%, transparent 62%);
+      filter: blur(24px);
+      pointer-events: none; z-index: 0; opacity: 0.85;
+    }
+
+    .frame {
+      position: fixed; inset: 16px;
+      border: 1px solid var(--line);
+      pointer-events: none; z-index: 4;
+    }
+
+    /* ---------- CABEÇALHO ---------- */
+    .header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 20px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      position: relative; z-index: 2;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .globe { width: clamp(26px, 6vw, 40px); height: auto; flex: none; }
+    .globe .spin { transform-box: fill-box; transform-origin: center; }
+    .tagline {
+      font-family: 'Mono45', monospace; text-transform: uppercase;
+      letter-spacing: 0.22em; font-size: clamp(7.5px, 1.05vw, 10.5px);
+      line-height: 1.75; color: var(--ink);
+    }
+    .meta {
+      text-align: right; font-family: 'Mono45', monospace; text-transform: uppercase;
+      letter-spacing: 0.28em; font-size: clamp(7.5px, 1.05vw, 10.5px);
+      line-height: 1.9; color: var(--muted); padding-left: 0.28em;
+    }
+    .meta b { color: var(--ink); font-weight: 400; }
+    .meta .dot { color: var(--orange); }
+
+    /* ---------- CENTRO ---------- */
+    .stage {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: clamp(52px, 7vw, 78px); text-align: center;
+      position: relative; z-index: 1;
+    }
+
+    .badge-tilt {
+      position: relative;
+      perspective: 900px;
+      transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      transition: transform 0.25s ease-out;
+      will-change: transform;
+    }
+    .badge-glow {
+      position: relative; z-index: 1;
+      filter: drop-shadow(0 16px 44px rgba(250, 76, 0, 0.34));
+      will-change: transform, filter;
+    }
+    .badge-rot {
+      display: inline-block;
+      position: relative; z-index: 1;
+      transform-origin: center;
+      transition: transform 0.55s cubic-bezier(.5, 0, .2, 1);
+      will-change: transform;
+    }
+    /* globo inicial (wireframe) — aparece, se desenha e gira; depois o laranja o preenche */
+    .badge-globe {
+      position: absolute; inset: 0; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: scale(0.86);
+      transition: opacity 0.6s ease, transform 0.7s cubic-bezier(.2, .8, .2, 1);
+      pointer-events: none;
+    }
+    .badge-globe svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .badge-globe .gdraw { stroke-dasharray: 400; }
+    .badge-globe .gspin { transform-box: fill-box; transform-origin: center; }
+    .badge {
+      position: relative; overflow: hidden;
+      background: var(--orange);
+      width: clamp(136px, 42vw, 232px);
+      height: clamp(136px, 42vw, 232px);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;               /* começa como círculo */
+      opacity: 0; transform: scale(0);  /* o laranja cresce DO CENTRO, preenchendo o globo */
+      transition: border-radius 0.55s cubic-bezier(.5, 0, .2, 1),
+                  opacity 0.4s ease, transform 0.7s cubic-bezier(.3, .9, .3, 1);
+    }
+    .badge .wordmark {
+      position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1;
+      transform-origin: center; opacity: 0;
+      transition: transform 0.55s cubic-bezier(.5, 0, .2, 1), opacity 0.5s ease;
+    }
+    /* halo laranja que "respira" (pulso suave) ao redor do quadrado */
+    .halo {
+      position: absolute; inset: -18%; z-index: 0; pointer-events: none;
+      background: radial-gradient(circle, rgba(250,76,0,0.38) 0%, rgba(250,76,0,0.14) 46%, transparent 70%);
+      opacity: 0;
+    }
+    .wordmark text { font-family: 'Druk Wide', sans-serif; }
+    /* reflexo de luz que atravessa a logo */
+    .shine {
+      position: absolute; inset: -40%;
+      background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.42) 50%, transparent 62%);
+      transform: translateX(-130%);
+      z-index: 2; pointer-events: none;
+    }
+
+    /* ---------- EM BREVE ---------- */
+    .soon-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; z-index: 1; }
+    .soon {
+      font-family: 'Druk Wide', sans-serif; text-transform: uppercase;
+      font-size: clamp(26px, 7.4vw, 68px); line-height: 0.98; letter-spacing: 0.01em;
+      color: var(--ink); display: inline-flex; align-items: baseline;
+    }
+    .wgrp { display: inline-flex; align-items: baseline; }
+    .wgrp.em {
+      font-family: 'Apple Garamond', serif;
+      font-style: italic;
+      font-size: 1.24em;
+      letter-spacing: 0.005em;
+    }
+    .wgrp.brv { margin-left: 0.32em; }
+    .ltr { display: inline-block; opacity: 1; }
+    .wgrp.em .ltr { color: var(--ink); }
+    .wgrp.brv .ltr { color: var(--orange); }
+    .cursor { display: inline-block; color: var(--orange); margin-left: 0.06em; }
+    .label {
+      font-family: 'Mono45', monospace; text-transform: uppercase;
+      letter-spacing: 0.42em; padding-left: 0.42em;
+      font-size: clamp(9px, 1.5vw, 12px); color: var(--muted);
+    }
+
+    /* ---------- RODAPÉ ---------- */
+    .footer {
+      display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;
+      padding-top: 16px; border-top: 1px solid var(--line);
+      font-family: 'Mono45 Light', monospace; text-transform: uppercase;
+      letter-spacing: 0.26em; font-size: clamp(7.5px, 1.05vw, 10.5px);
+      color: var(--muted); position: relative; z-index: 2;
+    }
+    .footer .accent { color: var(--orange); }
+
+    @media (max-width: 640px) {
+      .frame { inset: 10px; }
+      .tagline { letter-spacing: 0.16em; }
+      .meta .hide-sm, .footer .hide-sm { display: none; }
+    }
+
+    /* =========================================================
+       ANIMAÇÕES (desativadas para quem prefere menos movimento)
+       ========================================================= */
+    @media (prefers-reduced-motion: no-preference) {
+      .header { animation: enterDown 0.8s cubic-bezier(.2,.7,.2,1) both 0.05s; }
+      .footer { animation: enterUp 0.8s cubic-bezier(.2,.7,.2,1) both 0.15s; }
+      .label  { animation: enterUp 0.7s cubic-bezier(.2,.7,.2,1) both 3.1s; }
+
+      /* o wordmark MULT. fica ancorado no centro desde o inicio,
+         revelado pelas formas enquanto elas se transformam (sem delay) */
+
+      /* a entrada da logo (globo -> círculo -> MULT) é controlada via JS */
+
+      /* contínuas — só depois que a logo assenta no quadrado */
+      body.ready .badge-glow { animation: float 6.5s ease-in-out infinite; }
+      body.ready .shine { animation: shine 6.5s ease-in-out infinite 1.4s; }
+
+      /* pulso = halo laranja que respira (entra e sai) ao redor do quadrado */
+      body.ready .halo { animation: haloPulse 3.6s ease-in-out infinite; }
+
+      /* globo se desenha na tela ao aparecer */
+      .badge-globe .gdraw { animation: draw 1.2s ease 0.2s both; }
+
+      /* ambientes */
+      .glow-bg { animation: breathe 7s ease-in-out infinite; }
+      .globe .spin { animation: globe 9s linear infinite; }
+      .badge-globe .gspin { animation: globe 8s linear infinite; }
+
+      /* letras do EM BREVE: surgem com foco (escalonado só na ENTRADA — não altera alinhamento) */
+      .ltr, .cursor { animation: letterIn 0.6s ease both calc(1.9s + var(--i) * 0.06s); }
+      .cursor { animation: letterIn 0.6s ease both calc(1.9s + var(--i) * 0.06s), blink 1.15s steps(1) infinite 3.2s; }
+      /* "EM BREVE" fica estático (sem flutuar) — o movimento é só o cursor "_" piscando */
+    }
+
+    @keyframes enterUp   { 0% { opacity: 0; transform: translateY(16px); } 100% { opacity: 1; transform: none; } }
+    @keyframes enterDown { 0% { opacity: 0; transform: translateY(-16px); } 100% { opacity: 1; transform: none; } }
+    @keyframes badgeIn   { 0% { opacity: 0; transform: scale(0.55); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+    @keyframes letterIn  { 0% { opacity: 0; filter: blur(7px); } 100% { opacity: 1; filter: blur(0); } }
+    @keyframes softFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes float     { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes glow {
+      0%,100% { filter: drop-shadow(0 16px 40px rgba(250,76,0,0.30)); }
+      50%     { filter: drop-shadow(0 24px 72px rgba(250,76,0,0.56)); }
+    }
+    @keyframes shine {
+      0%   { transform: translateX(-130%); }
+      16%  { transform: translateX(130%); }
+      100% { transform: translateX(130%); }
+    }
+    @keyframes breathe {
+      0%,100% { opacity: 0.7; transform: translate(-50%, -50%) scale(0.94); }
+      50%     { opacity: 1;   transform: translate(-50%, -50%) scale(1.06); }
+    }
+    @keyframes blink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
+    @keyframes globe { to { transform: rotate(360deg); } }
+    /* halo respira: pulso laranja suave que entra e sai */
+    @keyframes haloPulse {
+      0%, 100% { opacity: 0.40; transform: scale(0.90); }
+      50%      { opacity: 0.85; transform: scale(1.12); }
+    }
+    /* globo se desenha na tela (linhas traçando) */
+    @keyframes draw {
+      from { stroke-dashoffset: 400; }
+      to   { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-bg"></div>
+  <div class="frame"></div>
+
+  <!-- CABEÇALHO -->
+  <header class="header">
+    <div class="brand">
+      <svg class="globe" viewBox="0 0 100 100" role="img" aria-label="Mult">
+        <g fill="none" stroke="#ffffff" stroke-width="4">
+          <circle cx="50" cy="50" r="46" />
+          <g class="spin">
+            <line x1="50" y1="4" x2="50" y2="96" />
+            <ellipse cx="50" cy="50" rx="23" ry="46" />
+          </g>
+          <line x1="4" y1="50" x2="96" y2="50" />
+          <line x1="11" y1="27" x2="89" y2="27" />
+          <line x1="11" y1="73" x2="89" y2="73" />
+        </g>
+      </svg>
+      <div class="tagline">
+        Fomos chamados para viver &amp; compartilhar<br />
+        a fé em Jesus de maneira autêntica
+      </div>
+    </div>
+    <div class="meta">
+      <span class="hide-sm">Site oficial da Mult<br /></span>
+      <b>Em breve</b> <span class="dot">·</span> 2026
+    </div>
+  </header>
+
+  <!-- CENTRO -->
+  <main class="stage">
+    <!-- Logo oficial: wordmark MULT. (Druk Wide Bold) branco sobre laranja -->
+    <div class="badge-tilt">
+      <div class="badge-glow">
+        <div class="halo" aria-hidden="true"></div>
+        <div class="badge-globe" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <g class="gdraw" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round">
+              <circle cx="50" cy="50" r="49" />
+              <g class="gspin">
+                <line x1="50" y1="1" x2="50" y2="99" />
+                <ellipse cx="50" cy="50" rx="24.5" ry="49" />
+              </g>
+              <line x1="1" y1="50" x2="99" y2="50" />
+              <line x1="8" y1="26" x2="92" y2="26" />
+              <line x1="8" y1="74" x2="92" y2="74" />
+            </g>
+          </svg>
+        </div>
+        <div class="badge-rot">
+          <div class="badge">
+            <!-- Wordmark = PATH VETORIAL oficial (Mult 1x1.svg): MULT + ponto já enquadrados no
+                 quadrado (viewBox 461x461). Path não depende de fonte/medição -> renderiza IGUAL
+                 em Chrome, Safari, iOS. Preenche o badge, então o padding oficial vem embutido. -->
+            <svg class="wordmark" viewBox="0 0 461.46 461.43" role="img" aria-label="MULT.">
+              <path fill="#ffffff" d="M32.79,196.94h38.56l22.54,41.33,22.94-41.33h36.98v73.56h-27.78v-45.88l-25.81,45.88h-14.34l-25.71-45.88v45.88h-27.39v-73.56ZM164.77,196.94h28.18v32.93c0,9,3.96,19.78,22.54,19.78s22.45-10.78,22.45-19.78v-32.93h28.08v35.1c0,14.24-6.72,39.65-48.45,39.65h-3.96c-42.81,0-48.85-25.41-48.85-39.65v-35.1ZM304.91,196.94v52.5h51.02v21.06h-79.1v-73.56h28.08ZM366.41,270.51v-53.49h-31.74v-20.07h91.56v20.07h-31.74v53.49h-28.08Z"/>
+              <rect fill="#ffffff" x="411.22" y="249.25" width="21.11" height="21.48"/>
+            </svg>
+            <div class="shine" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="soon-wrap">
+      <h1 class="soon" aria-label="Em breve">
+        <span class="wgrp em" aria-hidden="true">
+          <span class="ltr" style="--i:0">E</span><span class="ltr" style="--i:1">M</span>
+        </span>
+        <span class="wgrp brv" aria-hidden="true">
+          <span class="ltr" style="--i:2">B</span><span class="ltr" style="--i:3">R</span><span class="ltr" style="--i:4">E</span><span class="ltr" style="--i:5">V</span><span class="ltr" style="--i:6">E</span>
+        </span>
+        <span class="cursor" style="--i:7" aria-hidden="true">_</span>
+      </h1>
+      <div class="label">Estamos construindo algo novo</div>
+    </div>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer class="footer">
+    <div>Igreja Mult</div>
+    <div class="hide-sm">Projeto de plantação</div>
+    <div><span class="accent">///</span> Em construção</div>
+  </footer>
+
+  <script>
+    (function () {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var badge = document.querySelector('.badge');
+      var word = document.querySelector('.wordmark');
+      var body = document.body;
+
+      var rot = document.querySelector('.badge-rot');
+      var globe = document.querySelector('.badge-globe');
+
+      // Sequência de formas: {br} anima o border-radius (círculo<->quadrado, SUAVE);
+      // {rot} gira INSTANTÂNEO — só no círculo, imperceptível. O quadrado/losango nunca gira à vista.
+      var seq = [
+        { br: '0px' },   // círculo -> quadrado reto
+        { br: '50%' },   // -> círculo
+        { rot: 45 },     // gira 45° instantâneo (invisível: está em círculo)
+        { br: '0px' },   // círculo -> losango
+        { br: '50%' },   // -> círculo
+        { rot: 0 },      // volta a 0° instantâneo
+        { br: '0px' }    // círculo -> quadrado final reto
+      ];
+
+      // gira sem transição — o MULT contra-gira junto pra ficar sempre reto
+      function setRot(deg) {
+        rot.style.transition = word.style.transition = 'none';
+        rot.style.transform = 'rotate(' + deg + 'deg)';
+        word.style.transform = 'rotate(' + (-deg) + 'deg)';
+        void rot.offsetWidth;
+        rot.style.transition = word.style.transition = '';
+      }
+
+      setRot(0);
+
+      if (reduce) {
+        globe.style.opacity = '0';
+        badge.style.opacity = '1'; badge.style.transform = 'scale(1)'; badge.style.borderRadius = '0';
+        word.style.opacity = '1';
+        body.classList.add('ready');
+        return;
+      }
+
+      // roda a sequência de formas a partir do círculo atual
+      var i = 0;
+      function step() {
+        if (i >= seq.length) { body.classList.add('ready'); return; }
+        var s = seq[i]; i++;
+        if (s.br !== undefined) { badge.style.borderRadius = s.br; setTimeout(step, 560); }
+        else { setRot(s.rot); setTimeout(step, 70); }
+      }
+
+      // INTRO: globo aparece e gira -> laranja preenche o globo de dentro -> MULT surge -> sequência
+      setTimeout(function () {            // 1) o globo aparece (desenha na tela + gira)
+        globe.style.opacity = '1';
+        globe.style.transform = 'scale(1)';
+      }, 150);
+      setTimeout(function () {            // 2) o laranja preenche o globo (cresce do centro); o wireframe some
+        badge.style.opacity = '1';
+        badge.style.transform = 'scale(1)';
+        globe.style.opacity = '0';
+        globe.style.transform = 'scale(1.05)';
+      }, 1900);
+      setTimeout(function () {            // 3) o "MULT" surge no círculo
+        word.style.opacity = '1';
+      }, 2550);
+      setTimeout(step, 2950);            // 4) segue: círculo -> quadrado -> ... -> quadrado final + halo
+    })();
+
+    /* (o wordmark MULT. agora é 100% estático no HTML — sem JS de layout, para renderizar
+        igual em Chrome, Safari/iOS, etc.) */
+
+    /* Iguala a altura das maiúsculas do "EM" (Apple Garamond) à do "BREVE" (Druk),
+       medindo a altura real do glifo via canvas — topo e base rente. */
+    (function () {
+      function match() {
+        try {
+          var ctx = document.createElement('canvas').getContext('2d');
+          function cap(font, txt) {
+            ctx.font = font;
+            var m = ctx.measureText(txt);
+            return (m.actualBoundingBoxAscent || 0) + (m.actualBoundingBoxDescent || 0);
+          }
+          var druk = cap("700 200px 'Druk Wide'", "BREVE");
+          var apple = cap("italic 200px 'Apple Garamond'", "EM");
+          if (druk > 0 && apple > 0) {
+            document.querySelector('.wgrp.em').style.fontSize = (druk / apple).toFixed(3) + 'em';
+          }
+        } catch (e) {}
+      }
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(match); }
+      else { window.addEventListener('load', match); }
+    })();
+
+    /* Parallax 3D da logo seguindo o cursor + brilho de fundo reagindo ao mouse */
+    (function () {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+      var tilt = document.querySelector('.badge-tilt');
+      var glow = document.querySelector('.glow-bg');
+      var raf = null;
+      function onMove(e) {
+        var w = window.innerWidth, h = window.innerHeight;
+        var px = (e.clientX / w) - 0.5, py = (e.clientY / h) - 0.5;
+        if (raf) return;
+        raf = requestAnimationFrame(function () {
+          raf = null;
+          tilt.style.setProperty('--ry', (px * 18).toFixed(2) + 'deg');
+          tilt.style.setProperty('--rx', (-py * 14).toFixed(2) + 'deg');
+          glow.style.transform = 'translate(calc(-50% + ' + (px * 60).toFixed(1) + 'px), calc(-50% + ' + (py * 60).toFixed(1) + 'px))';
+        });
+      }
+      function reset() { tilt.style.setProperty('--ry', '0deg'); tilt.style.setProperty('--rx', '0deg'); }
+      window.addEventListener('pointermove', onMove, { passive: true });
+      window.addEventListener('pointerleave', reset);
+      window.addEventListener('blur', reset);
+    })();
+  </script>
+</body>
+</html>
